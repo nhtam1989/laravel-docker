@@ -3,8 +3,8 @@ pipeline {
   agent none
 
   environment {
-    DOCKER_IMAGE_PHP = "truongdinhtrongctim/php-laravel"
-    DOCKER_IMAGE_NGINX = "truongdinhtrongctim/nginx-laravel"
+    DOCKER_IMAGE_PHP = "nhtam1989/php-laravel"
+    DOCKER_IMAGE_NGINX = "nhtam1989/nginx-laravel"
 
   }
 
