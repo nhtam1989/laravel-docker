@@ -35,6 +35,7 @@ pipeline {
       steps {
         script {
           if (GIT_BRANCH == 'main') {
+            sh "echo branch Dev"
             sh "echo build php - laravel"
             sh "docker build -t ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} -f Dockerfile.php . "
             sh "docker tag ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} ${DOCKER_IMAGE_PHP}:latest"
@@ -44,7 +45,6 @@ pipeline {
                 sh "docker push ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
                 sh "docker push ${DOCKER_IMAGE_PHP}:latest"
             }
-
             //clean to save disk
             sh "docker image rm ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
             sh "docker image rm ${DOCKER_IMAGE_PHP}:latest"
