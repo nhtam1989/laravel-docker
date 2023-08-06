@@ -5,9 +5,7 @@ pipeline {
   environment {
     DOCKER_IMAGE_PHP = "nhtam1989/php-laravel"
     DOCKER_IMAGE_NGINX = "nhtam1989/nginx-laravel"
-
   }
-
 
   stages {
     
@@ -35,8 +33,10 @@ pipeline {
       }
       steps {
         script {
-          if (GIT_BRANCH == 'main') {
-            sh "echo branch Dev -v1 2"
+          
+          def GIT_BRANCH_NAME = env.GIT_BRANCH.tokenize('/')[1]
+          if (GIT_BRANCH_NAME == 'main') {
+            sh "echo ${GIT_BRANCH_NAME}"
             sh "echo build php - laravel"
             sh "docker build -t ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} -f Dockerfile.php . "
             sh "docker tag ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} ${DOCKER_IMAGE_PHP}:latest"
@@ -51,6 +51,12 @@ pipeline {
             sh "docker image rm ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
             sh "docker image rm ${DOCKER_IMAGE_PHP}:latest"
           }
+
+          if (GIT_BRANCH_NAME == 'dev') { 
+              sh "echo ${GIT_BRANCH_NAME}"
+          }
+
+          
         }
       }
     }
