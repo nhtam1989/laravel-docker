@@ -19,7 +19,7 @@ pipeline {
       steps {
         script {
           if (GIT_BRANCH == 'main') {
-            sh "echo branch Dev -v1"
+            sh "echo branch Dev -v1 2"
             sh "echo build php - laravel"
             sh "docker build -t ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} -f Dockerfile.php . "
             sh "docker tag ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} ${DOCKER_IMAGE_PHP}:latest"
