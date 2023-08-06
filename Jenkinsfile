@@ -23,21 +23,27 @@ pipeline {
       steps {
         script {
           def GIT_BRANCH_NAME = env.GIT_BRANCH.tokenize('/')[1]
-
-          sh "echo ${GIT_BRANCH_NAME}"
-          sh "echo branch Dev -v1 2"
-          sh "echo build php - laravel"
-          sh "docker build -t ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} -f Dockerfile.php . "
-          sh "docker tag ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} ${DOCKER_IMAGE_PHP}:latest"
-          sh "docker image ls | grep ${DOCKER_IMAGE_PHP}"
-          withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-              sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
-              sh "docker push ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
-              sh "docker push ${DOCKER_IMAGE_PHP}:latest"
+          if (GIT_BRANCH_NAME == 'main') {
+            sh "echo ${GIT_BRANCH_NAME}"
+            sh "echo build php - laravel"
+            sh "docker build -t ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} -f Dockerfile.php . "
+            sh "docker tag ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} ${DOCKER_IMAGE_PHP}:latest"
+            sh "docker image ls | grep ${DOCKER_IMAGE_PHP}"
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
+                sh "docker push ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
+                sh "docker push ${DOCKER_IMAGE_PHP}:latest"
+            }
+            //clean to save disk
+            sh "docker image rm ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
+            sh "docker image rm ${DOCKER_IMAGE_PHP}:latest"
           }
-          //clean to save disk
-          sh "docker image rm ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
-          sh "docker image rm ${DOCKER_IMAGE_PHP}:latest"
+
+          if (GIT_BRANCH_NAME == 'dev') { 
+              sh "echo ${GIT_BRANCH_NAME}"
+          }
+
+          
         }
       }
     }
