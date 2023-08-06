@@ -22,6 +22,7 @@ pipeline {
 
       steps {
         script {
+          
           def GIT_BRANCH_NAME = env.GIT_BRANCH.tokenize('/')[1]
           if (GIT_BRANCH_NAME == 'main') {
             sh "echo ${GIT_BRANCH_NAME}"
