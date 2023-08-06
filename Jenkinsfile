@@ -11,6 +11,22 @@ pipeline {
 
   stages {
 
+
+    // stage('Sonarqube') {
+    //   agent { node {label 'master'}}
+    //     environment {
+    //         scannerHome = tool 'SonarQubeScanner'
+    //     }
+    //     steps {
+    //         withSonarQubeEnv('sonarqube') {
+    //             sh "${scannerHome}/bin/sonar-scanner"
+    //         }
+    //         timeout(time: 10, unit: 'MINUTES') {
+    //             waitForQualityGate abortPipeline: true
+    //         }
+    //     }
+    // }
+  
     stage("build php-laravel") {
       agent { node {label 'master'}}
       environment {
@@ -18,7 +34,7 @@ pipeline {
       }
       steps {
         script {
-            sh "echo branch Dev -v1"
+          if (GIT_BRANCH == 'main') {
             sh "echo build php - laravel"
             sh "docker build -t ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} -f Dockerfile.php . "
             sh "docker tag ${DOCKER_IMAGE_PHP}:${DOCKER_TAG} ${DOCKER_IMAGE_PHP}:latest"
@@ -28,9 +44,11 @@ pipeline {
                 sh "docker push ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
                 sh "docker push ${DOCKER_IMAGE_PHP}:latest"
             }
+
             //clean to save disk
             sh "docker image rm ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
             sh "docker image rm ${DOCKER_IMAGE_PHP}:latest"
+          }
         }
       }
     }
