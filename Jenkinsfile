@@ -5,9 +5,7 @@ pipeline {
   environment {
     DOCKER_IMAGE_PHP = "nhtam1989/php-laravel"
     DOCKER_IMAGE_NGINX = "nhtam1989/nginx-laravel"
-
   }
-
 
   stages {
 
@@ -16,10 +14,6 @@ pipeline {
       environment {
         DOCKER_TAG="${GIT_BRANCH.tokenize('/').pop()}-${GIT_COMMIT.substring(0,7)}"
       }
-      when {
-        branch "main", "dev"
-      }
-
       steps {
         script {
           
