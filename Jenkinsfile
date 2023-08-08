@@ -51,12 +51,11 @@ pipeline {
             sh "docker image rm ${DOCKER_IMAGE_PHP}:${DOCKER_TAG}"
             sh "docker image rm ${DOCKER_IMAGE_PHP}:latest"
           }
+          
 
           if (GIT_BRANCH_NAME == 'dev') { 
               sh "echo ${GIT_BRANCH_NAME}"
           }
-
-          
         }
       }
     }
