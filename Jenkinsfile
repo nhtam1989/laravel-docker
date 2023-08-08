@@ -37,8 +37,6 @@ pipeline {
           if (GIT_BRANCH_NAME == 'dev') { 
               sh "echo ${GIT_BRANCH_NAME}"
           }
-
-          
         }
       }
     }
